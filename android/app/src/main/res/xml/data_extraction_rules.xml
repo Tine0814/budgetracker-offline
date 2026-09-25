@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup disableIfNoEncryptionCapabilities="true">
+        <!-- Defense in depth: allowBackup is also disabled in the manifest. -->
+        <exclude domain="file" path="Budget Tracker/" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="Budget Tracker/" />
+    </device-transfer>
+</data-extraction-rules>

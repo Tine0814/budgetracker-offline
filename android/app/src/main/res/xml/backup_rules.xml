@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Financial snapshots, queued writes, and the saved API URL stay local. -->
+    <exclude domain="file" path="Budget Tracker/" />
+</full-backup-content>
