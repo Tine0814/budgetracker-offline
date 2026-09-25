@@ -18,6 +18,8 @@ class _SettingsPageState extends State<SettingsPage> {
   late String currency;
   late String locale;
   late int weekStartsOn;
+  late bool showJewelryInReports;
+  late bool showCreditCardsInReports;
   late AppThemePreference themePreference;
   bool saving = false;
 
@@ -31,6 +33,9 @@ class _SettingsPageState extends State<SettingsPage> {
     currency = widget.controller.settings.currencyCode;
     locale = widget.controller.settings.locale;
     weekStartsOn = widget.controller.settings.weekStartsOn;
+    showJewelryInReports = widget.controller.settings.showJewelryInReports;
+    showCreditCardsInReports =
+        widget.controller.settings.showCreditCardsInReports;
     themePreference = widget.controller.config.themePreference;
   }
 
@@ -170,6 +175,39 @@ class _SettingsPageState extends State<SettingsPage> {
                     : (value) =>
                           setState(() => weekStartsOn = value ?? weekStartsOn),
               ),
+              const Divider(height: 36),
+              Text(
+                'Report visibility',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Choose which summaries appear in Overview and Reports. Recorded income and expenses still count in cashflow totals.',
+                style: TextStyle(color: context.palette.muted, fontSize: 12),
+              ),
+              SwitchListTile.adaptive(
+                key: const Key('settings-show-jewelry-in-reports'),
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Show jewelry'),
+                subtitle: const Text('Gold value and gain or loss summary'),
+                value: showJewelryInReports,
+                onChanged: saving
+                    ? null
+                    : (value) => setState(() => showJewelryInReports = value),
+              ),
+              SwitchListTile.adaptive(
+                key: const Key('settings-show-credit-cards-in-reports'),
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Show credit cards'),
+                subtitle: const Text(
+                  'Card debt, net cash position, and upcoming billing',
+                ),
+                value: showCreditCardsInReports,
+                onChanged: saving
+                    ? null
+                    : (value) =>
+                          setState(() => showCreditCardsInReports = value),
+              ),
               const SizedBox(height: 18),
               FilledButton.icon(
                 onPressed: saving ? null : _savePreferences,
@@ -232,6 +270,8 @@ class _SettingsPageState extends State<SettingsPage> {
           currencyCode: currency,
           locale: locale,
           weekStartsOn: weekStartsOn,
+          showJewelryInReports: showJewelryInReports,
+          showCreditCardsInReports: showCreditCardsInReports,
         ),
       );
       if (mounted) showSuccess(context, 'Preferences saved on this phone.');

@@ -173,6 +173,16 @@ class _LocalBackupValidator {
     }
     text(settings['timezone'], 'Timezone');
     integer(settings['week_starts_on'], 'Week start', max: 6);
+    for (final flag in [
+      'show_jewelry_in_reports',
+      'show_credit_cards_in_reports',
+    ]) {
+      if (settings.containsKey(flag) && settings[flag] is! bool) {
+        invalid('Settings.$flag must be true or false');
+      }
+      settings.putIfAbsent(flag, () => true);
+    }
+    result['settings'] = settings;
     final sequences = map(result['sequences'], 'Sequences');
     for (final entry in sequences.entries) {
       integer(entry.value, 'Sequence ${entry.key}');

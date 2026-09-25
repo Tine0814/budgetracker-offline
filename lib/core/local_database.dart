@@ -108,6 +108,8 @@ class LocalDatabase {
         'locale': 'en_PH',
         'timezone': 'Asia/Manila',
         'week_starts_on': 1,
+        'show_jewelry_in_reports': true,
+        'show_credit_cards_in_reports': true,
       },
       'sequences': <String, dynamic>{},
       'accounts': <Map<String, dynamic>>[
@@ -224,6 +226,14 @@ class LocalDatabase {
           final week = payload['week_starts_on'];
           if (week is! int || week < 0 || week > 6) {
             fail('Choose a valid start of the week.');
+          }
+          for (final flag in [
+            'show_jewelry_in_reports',
+            'show_credit_cards_in_reports',
+          ]) {
+            if (payload.containsKey(flag) && payload[flag] is! bool) {
+              fail('Report visibility must be true or false.');
+            }
           }
           state['settings'] = {...state['settings'] as Map, ...payload};
         }

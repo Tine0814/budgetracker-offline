@@ -34,6 +34,7 @@ class _ReportsPageState extends State<ReportsPage> {
   Widget build(BuildContext context) {
     final scope = widget.controller.selectedFinanceScope;
     final isJoint = scope == FinanceScope.joint;
+    final showCreditCards = widget.controller.settings.showCreditCardsInReports;
     final loadedSummary = widget.controller.reportSummary;
     if (!widget.controller.hasSavedSettings || loadedSummary == null) {
       return SingleChildScrollView(
@@ -126,7 +127,7 @@ class _ReportsPageState extends State<ReportsPage> {
             const SizedBox(height: 12),
             SectionCard(
               child: Text(
-                'Top-line cashflow, credit-card utang, net position, and budget totals include pending transaction adjustments. The chart and category breakdown remain saved server data until sync completes.',
+                'Top-line cashflow and visible balance and budget totals include pending transaction adjustments. The chart and category breakdown remain saved server data until sync completes.',
                 style: TextStyle(
                   color: context.palette.inkSoft,
                   fontSize: 12.5,
@@ -150,6 +151,7 @@ class _ReportsPageState extends State<ReportsPage> {
           if (!isJoint)
             _PersonalReportsDashboard(
               summary: summary,
+              showCreditCards: showCreditCards,
               currencyCode: widget.controller.currencyCode,
               locale: widget.controller.locale,
             ),
@@ -214,9 +216,10 @@ class _ReportsPageState extends State<ReportsPage> {
                                 context.palette.greenDark,
                               ),
                             ],
-                            if (summary.accounts.any(
-                              (account) => account.isCreditCard,
-                            )) ...[
+                            if (showCreditCards &&
+                                summary.accounts.any(
+                                  (account) => account.isCreditCard,
+                                )) ...[
                               _ReportMetric(
                                 'Credit card utang',
                                 summary.creditCardDebtMinor,
@@ -326,20 +329,22 @@ class _ReportsPageState extends State<ReportsPage> {
 class _PersonalReportsDashboard extends StatelessWidget {
   const _PersonalReportsDashboard({
     required this.summary,
+    required this.showCreditCards,
     required this.currencyCode,
     required this.locale,
   });
 
   final ReportSummary summary;
+  final bool showCreditCards;
   final String currencyCode;
   final String locale;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    final hasCreditCards = summary.accounts.any(
-      (account) => account.isCreditCard,
-    );
+    final hasCreditCards =
+        showCreditCards &&
+        summary.accounts.any((account) => account.isCreditCard);
     final hasSavings = summary.accounts.any(
       (account) => account.isSavingsAccount,
     );

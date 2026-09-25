@@ -173,6 +173,8 @@ class AppSettings {
     this.locale = 'en_PH',
     this.timezone = 'Asia/Manila',
     this.weekStartsOn = 1,
+    this.showJewelryInReports = true,
+    this.showCreditCardsInReports = true,
   });
 
   factory AppSettings.fromJson(Object? value) {
@@ -182,6 +184,10 @@ class AppSettings {
       locale: map['locale']?.toString() ?? 'en_PH',
       timezone: map['timezone']?.toString() ?? 'Asia/Manila',
       weekStartsOn: jsonInt(map['week_starts_on'], 1),
+      showJewelryInReports: jsonBool(map['show_jewelry_in_reports'] ?? true),
+      showCreditCardsInReports: jsonBool(
+        map['show_credit_cards_in_reports'] ?? true,
+      ),
     );
   }
 
@@ -189,12 +195,16 @@ class AppSettings {
   final String locale;
   final String timezone;
   final int weekStartsOn;
+  final bool showJewelryInReports;
+  final bool showCreditCardsInReports;
 
   Map<String, dynamic> toJson() => {
     'currency_code': currencyCode,
     'locale': locale,
     'timezone': timezone,
     'week_starts_on': weekStartsOn,
+    'show_jewelry_in_reports': showJewelryInReports,
+    'show_credit_cards_in_reports': showCreditCardsInReports,
   };
 
   AppSettings copyWith({
@@ -202,11 +212,16 @@ class AppSettings {
     String? locale,
     String? timezone,
     int? weekStartsOn,
+    bool? showJewelryInReports,
+    bool? showCreditCardsInReports,
   }) => AppSettings(
     currencyCode: currencyCode ?? this.currencyCode,
     locale: locale ?? this.locale,
     timezone: timezone ?? this.timezone,
     weekStartsOn: weekStartsOn ?? this.weekStartsOn,
+    showJewelryInReports: showJewelryInReports ?? this.showJewelryInReports,
+    showCreditCardsInReports:
+        showCreditCardsInReports ?? this.showCreditCardsInReports,
   );
 }
 

@@ -15,6 +15,7 @@ Laravel, PHP, MySQL, an API, an account, or an internet connection.
 - Cutoff schedules and historical budget snapshots
 - Gold and jewelry inventory, your saved per-karat prices, and conversion to cash
 - Light, dark, and system themes, currency and week preferences
+- Settings to hide jewelry and credit-card summaries in Overview and Reports
 - Backup export and restore in Settings
 
 Joint accounts, shared expenses, deals, penalties, and server synchronization
@@ -108,6 +109,11 @@ In **Settings → Your data & backups → Export backup**, copy the JSON to a fi
 you keep somewhere safe. On the destination phone, paste it into **Restore backup**, then confirm.
 Restoring replaces that app's current ledger. The backup includes your financial
 records and preferences for currency and reporting; theme stays device-specific.
+
+In **Settings → Report visibility**, turn off **Show jewelry** or **Show credit
+cards**, then tap **Save preferences** to hide those summaries in Overview and
+Reports. These preferences are saved on your phone and included in backups.
+Recorded income and expenses still count in cashflow totals.
 
 Keep a backup before uninstalling or clearing app storage, because doing either
 removes the local ledger. There is no server copy or cloud synchronization. Data

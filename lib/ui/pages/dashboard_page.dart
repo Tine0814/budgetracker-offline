@@ -83,6 +83,8 @@ class DashboardPage extends StatelessWidget {
       );
     }
     final summary = loadedSummary;
+    final showJewelry = controller.settings.showJewelryInReports;
+    final showCreditCards = controller.settings.showCreditCardsInReports;
     final isDashboardRefreshing = controller.isDashboardRefreshing;
     Widget refreshablePanel({
       required String id,
@@ -106,7 +108,8 @@ class DashboardPage extends StatelessWidget {
         .where(
           (account) =>
               account.scope == controller.selectedFinanceScope &&
-              !account.isLiability,
+              !account.isLiability &&
+              (showCreditCards || !account.isCreditCard),
         )
         .toList(growable: false);
     final installmentSummary = _InstallmentMonthSummary.fromSources(
@@ -119,6 +122,7 @@ class DashboardPage extends StatelessWidget {
       scope: controller.selectedFinanceScope,
       anchor: controller.anchor,
       palette: palette,
+      showCreditCards: showCreditCards,
     );
     final upcomingCardBilling = _NextMonthCreditCardBillingSummary.fromSources(
       transactions: controller.transactions,
@@ -156,7 +160,9 @@ class DashboardPage extends StatelessWidget {
           const SizedBox(height: 12),
           SectionCard(
             child: Text(
-              'Top-line cash, credit-card utang, net position, income, expense, and budget figures include pending transaction adjustments. Charts and category breakdowns remain from the last complete server sync.',
+              showCreditCards
+                  ? 'Top-line cash, credit-card utang, net position, income, expense, and budget figures include pending transaction adjustments. Charts and category breakdowns remain from the last complete server sync.'
+                  : 'Top-line cash, income, expense, and budget figures include pending transaction adjustments. Charts and category breakdowns remain from the last complete server sync.',
               style: TextStyle(
                 color: palette.inkSoft,
                 fontSize: 12.5,
@@ -191,9 +197,10 @@ class DashboardPage extends StatelessWidget {
             showSavings: summary.accounts.any(
               (account) => account.isSavingsAccount,
             ),
-            showCreditCardDebt: summary.accounts.any(
-              (account) => account.isCreditCard,
-            ),
+            showCreditCardDebt:
+                showCreditCards &&
+                summary.accounts.any((account) => account.isCreditCard),
+            showJewelry: showJewelry,
             portfolio: jewelryPortfolio,
             hasGoldCostBasis: hasGoldCostBasis,
             goldGainLossMinor: goldGainLoss,
@@ -259,6 +266,7 @@ class DashboardPage extends StatelessWidget {
                 locale: controller.locale,
               ),
             );
+            if (!showCreditCards) return budget;
             final billing = _NextMonthCreditCardBillingPanel(
               summary: upcomingCardBilling,
               currencyCode: controller.currencyCode,
@@ -695,6 +703,7 @@ class _InstallmentMonthSummary {
     required FinanceScope scope,
     required DateTime anchor,
     required AppPalette palette,
+    required bool showCreditCards,
   }) {
     final month = DateTime(anchor.year, anchor.month);
     final now = DateTime.now();
@@ -710,17 +719,6 @@ class _InstallmentMonthSummary {
       );
     }
 
-    final installmentTransactions =
-        (historyAvailable ? transactions : const <TransactionRecord>[])
-            .where(
-              (transaction) =>
-                  transaction.scope == scope &&
-                  transaction.kind == 'expense' &&
-                  transaction.isInstallment &&
-                  transaction.installmentPlanId == null,
-            )
-            .toList(growable: false);
-
     Account? resolveLegacyAccount(TransactionRecord transaction) {
       Account? account;
       for (final candidate in accounts) {
@@ -735,6 +733,19 @@ class _InstallmentMonthSummary {
       }
       return account;
     }
+
+    final installmentTransactions =
+        (historyAvailable ? transactions : const <TransactionRecord>[])
+            .where(
+              (transaction) =>
+                  transaction.scope == scope &&
+                  transaction.kind == 'expense' &&
+                  transaction.isInstallment &&
+                  transaction.installmentPlanId == null &&
+                  (showCreditCards ||
+                      resolveLegacyAccount(transaction)?.isCreditCard != true),
+            )
+            .toList(growable: false);
 
     Category? resolveLegacyCategory(TransactionRecord transaction) {
       Category? category = transaction.category;
@@ -884,6 +895,7 @@ class _InstallmentMonthSummary {
         if (account == null && embeddedAccount?.scope == scope) {
           account = embeddedAccount;
         }
+        if (!showCreditCards && account?.isCreditCard == true) continue;
         Category? category = plan.category;
         if (category == null) {
           for (final candidate in categories) {
@@ -1926,6 +1938,7 @@ class _CurrentPosition extends StatelessWidget {
     required this.netPositionMinor,
     required this.showSavings,
     required this.showCreditCardDebt,
+    required this.showJewelry,
     required this.portfolio,
     required this.hasGoldCostBasis,
     required this.goldGainLossMinor,
@@ -1941,6 +1954,7 @@ class _CurrentPosition extends StatelessWidget {
   final int netPositionMinor;
   final bool showSavings;
   final bool showCreditCardDebt;
+  final bool showJewelry;
   final JewelryPortfolioSummary portfolio;
   final bool hasGoldCostBasis;
   final int goldGainLossMinor;
@@ -1964,7 +1978,7 @@ class _CurrentPosition extends StatelessWidget {
             1 +
             (showSavings ? 1 : 0) +
             (showCreditCardDebt ? 1 : 0) +
-            (scope == FinanceScope.personal ? 1 : 0);
+            (showJewelry && scope == FinanceScope.personal ? 1 : 0);
         final estimatedCardWidth =
             (constraints.maxWidth - math.max(0, cardCount - 1) * 14) /
             cardCount;
@@ -1983,7 +1997,7 @@ class _CurrentPosition extends StatelessWidget {
               currencyCode: currencyCode,
               locale: locale,
             ),
-          if (scope == FinanceScope.personal)
+          if (showJewelry && scope == FinanceScope.personal)
             _GoldPositionCard(
               portfolio: portfolio,
               hasCostBasis: hasGoldCostBasis,
@@ -4788,7 +4802,9 @@ class _InstallmentSummaryPanel extends StatelessWidget {
               )
             else
               Text(
-                'Each scheduled plan contributes its saved monthly amount once. Purchase totals and card debt are not added here.',
+                controller.settings.showCreditCardsInReports
+                    ? 'Each scheduled plan contributes its saved monthly amount once. Purchase totals and card debt are not added here.'
+                    : 'Each scheduled plan contributes its saved monthly amount once. Purchase totals are not added here.',
                 style: TextStyle(
                   color: palette.muted,
                   fontSize: 11.5,
