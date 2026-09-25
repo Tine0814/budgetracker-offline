@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:expeneses_tracker_offline/core/api_client.dart';
-import 'package:expeneses_tracker_offline/core/app_repository.dart';
-import 'package:expeneses_tracker_offline/core/config_store.dart';
-import 'package:expeneses_tracker_offline/core/local_database.dart';
-import 'package:expeneses_tracker_offline/models/domain_models.dart';
-import 'package:expeneses_tracker_offline/state/app_controller.dart';
-import 'package:expeneses_tracker_offline/theme/app_theme.dart';
-import 'package:expeneses_tracker_offline/ui/app_shell.dart';
-import 'package:expeneses_tracker_offline/ui/pages/accounts_page.dart';
-import 'package:expeneses_tracker_offline/ui/pages/settings_page.dart';
+import 'package:expenses_tracker_offline/core/api_client.dart';
+import 'package:expenses_tracker_offline/core/app_repository.dart';
+import 'package:expenses_tracker_offline/core/config_store.dart';
+import 'package:expenses_tracker_offline/core/local_database.dart';
+import 'package:expenses_tracker_offline/models/domain_models.dart';
+import 'package:expenses_tracker_offline/state/app_controller.dart';
+import 'package:expenses_tracker_offline/theme/app_theme.dart';
+import 'package:expenses_tracker_offline/ui/app_shell.dart';
+import 'package:expenses_tracker_offline/ui/pages/accounts_page.dart';
+import 'package:expenses_tracker_offline/ui/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -23,7 +23,7 @@ void main() {
     expect(find.textContaining('Joint'), findsNothing);
     await tester.tap(find.text('More'));
     await tester.pumpAndSettle();
-    expect(find.text('expeneses tracker offline'), findsOneWidget);
+    expect(find.text('expenses tracker offline'), findsOneWidget);
     expect(find.text('Deals & penalties'), findsNothing);
     for (final label in [
       'Gold & jewelry',

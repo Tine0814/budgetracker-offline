@@ -82,7 +82,7 @@ class _BudgetTrackerAppState extends State<BudgetTrackerApp>
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'expeneses tracker offline',
+      title: 'expenses tracker offline',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,

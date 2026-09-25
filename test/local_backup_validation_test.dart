@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:expeneses_tracker_offline/core/api_client.dart';
-import 'package:expeneses_tracker_offline/core/local_database.dart';
+import 'package:expenses_tracker_offline/core/api_client.dart';
+import 'package:expenses_tracker_offline/core/local_database.dart';
 
 void main() {
   late Directory directory;
@@ -143,6 +143,28 @@ void main() {
     await db.request('POST', '/savings-interest-credits/accrue');
     return db.exportBackup();
   }
+
+  test('legacy backups preserve the ledger and export the corrected format', () async {
+    final currentBackup = await completeBackup();
+    final legacyBackup = jsonDecode(currentBackup) as Map<String, dynamic>;
+    // This literal matches backups created before the spelling correction.
+    legacyBackup['format'] = 'expeneses_tracker_offline';
+    final restoredFile = File('${directory.path}/restored.json');
+    final restored = LocalDatabase(file: restoredFile, clock: () => now);
+
+    await restored.importBackup(jsonEncode(legacyBackup));
+    expect(await restored.exportBackup(), currentBackup);
+    expect(
+      await restored.request('GET', '/accounts', query: {'include_archived': 1}),
+      await db.request('GET', '/accounts', query: {'include_archived': 1}),
+    );
+    final restarted = LocalDatabase(file: restoredFile, clock: () => now);
+    expect(await restarted.exportBackup(), currentBackup);
+    expect(
+      (jsonDecode(await restoredFile.readAsString()) as Map)['format'],
+      'expenses_tracker_offline',
+    );
+  });
 
   test('seed and complete exported ledger validate and preserve every balance on restart', () async {
     await db.request('GET', '/accounts');

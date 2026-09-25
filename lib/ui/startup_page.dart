@@ -39,7 +39,7 @@ class StartupPage extends StatelessWidget {
                   const BrandLogo(key: Key('startup-brand-logo'), size: 56),
                   const SizedBox(height: 20),
                   Text(
-                    'expeneses tracker offline',
+                    'expenses tracker offline',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),

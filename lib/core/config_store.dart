@@ -43,7 +43,7 @@ class ConfigStore {
   Future<File> _file() async {
     if (_configFileProvider != null) return _configFileProvider();
     final directory = await _supportDirectoryProvider();
-    return File('${directory.path}/expeneses_tracker_offline/preferences.json');
+    return File('${directory.path}/expenses_tracker_offline/preferences.json');
   }
 
   Future<AppConfig> load() async {

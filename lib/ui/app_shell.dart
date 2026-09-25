@@ -90,7 +90,7 @@ class _AppShellState extends State<AppShell> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'expeneses tracker offline',
+                      'expenses tracker offline',
                       style: TextStyle(
                         color: context.palette.onSidebar,
                         fontSize: 19,

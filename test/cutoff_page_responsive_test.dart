@@ -1,10 +1,10 @@
-import 'package:expeneses_tracker_offline/core/api_client.dart';
-import 'package:expeneses_tracker_offline/core/app_repository.dart';
-import 'package:expeneses_tracker_offline/core/config_store.dart';
-import 'package:expeneses_tracker_offline/models/domain_models.dart';
-import 'package:expeneses_tracker_offline/state/app_controller.dart';
-import 'package:expeneses_tracker_offline/theme/app_theme.dart';
-import 'package:expeneses_tracker_offline/ui/pages/budgets_page.dart';
+import 'package:expenses_tracker_offline/core/api_client.dart';
+import 'package:expenses_tracker_offline/core/app_repository.dart';
+import 'package:expenses_tracker_offline/core/config_store.dart';
+import 'package:expenses_tracker_offline/models/domain_models.dart';
+import 'package:expenses_tracker_offline/state/app_controller.dart';
+import 'package:expenses_tracker_offline/theme/app_theme.dart';
+import 'package:expenses_tracker_offline/ui/pages/budgets_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

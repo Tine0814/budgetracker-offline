@@ -1,4 +1,4 @@
-# expeneses tracker offline
+# expenses tracker offline
 
 A standalone Android and iOS version of Budget Flow. It keeps the personal
 tracking screens and stores the entire ledger on your phone. It does not use
@@ -21,6 +21,26 @@ Joint accounts, shared expenses, deals, penalties, and server synchronization
 are excluded. Gold prices are entered by you; this app does not download live
 market quotes. Automatic interest runs when the app is opened/refreshed, with
 catch-up for missed months, rather than while the app is closed.
+
+## Windows setup
+
+See [Windows setup instructions](README-WINDOWS.md) for installing Flutter and
+Android Studio, cloning from GitHub, running on an emulator or phone, building
+an APK, and troubleshooting common messages.
+
+Once Flutter and the Android tools are installed, open PowerShell in the
+cloned project folder and run:
+
+```powershell
+flutter doctor
+flutter pub get
+flutter devices
+flutter run -d YOUR_ANDROID_DEVICE_ID
+```
+
+Replace `YOUR_ANDROID_DEVICE_ID` with the Android ID listed by `flutter devices`.
+Windows is the development computer; the app runs on Android. Use these Flutter
+commands in PowerShell; `run-mobile.sh` is a Bash helper for macOS/Linux.
 
 ## Run on the Android emulator
 
@@ -61,7 +81,7 @@ flutter run -d <simulator-id>
 ```
 
 An actual iPhone needs your own Apple development signing team. The app has a
-separate bundle identifier (`com.expenesestracker.offline`) so it can coexist
+separate bundle identifier (`com.expensestracker.offline`) so it can coexist
 with the original app.
 
 ## Build an Android APK
@@ -84,8 +104,8 @@ use integer minor units. Changes are serialized and saved by atomic file
 replacement; failed operations roll back together. A previous file is retained
 locally for recovery.
 
-In **Settings → Backup**, export and copy the JSON to a file you keep somewhere
-safe. On the destination phone, paste it into **Restore backup**, then confirm.
+In **Settings → Your data & backups → Export backup**, copy the JSON to a file
+you keep somewhere safe. On the destination phone, paste it into **Restore backup**, then confirm.
 Restoring replaces that app's current ledger. The backup includes your financial
 records and preferences for currency and reporting; theme stays device-specific.
 
@@ -93,6 +113,14 @@ Keep a backup before uninstalling or clearing app storage, because doing either
 removes the local ledger. There is no server copy or cloud synchronization. Data
 and backups are JSON, protected by the phone's app sandbox rather than separate
 application encryption.
+
+### Moving from the earlier app name
+
+The corrected app uses `com.expensestracker.offline` on Android and iOS.
+Because its identifier changed, it installs as a separate app. Keep the earlier
+app installed, export its ledger with **Settings → Export backup**, and restore that
+JSON in the renamed app. Check your balances before removing the earlier app.
+Older backups are accepted; new exports use the corrected format name.
 
 ## Verify
 

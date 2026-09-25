@@ -72,7 +72,7 @@ class LocalDatabase {
   Future<File> _resolveFile() async {
     if (_file != null) return _file!;
     final support = await getApplicationSupportDirectory();
-    return _file = File('${support.path}/expeneses_tracker_offline/data.json');
+    return _file = File('${support.path}/expenses_tracker_offline/data.json');
   }
 
   Future<void> _load() async {
@@ -99,7 +99,7 @@ class LocalDatabase {
     String hex(int n) =>
         List.generate(n, (_) => random.nextInt(16).toRadixString(16)).join();
     return {
-      'format': 'expeneses_tracker_offline',
+      'format': 'expenses_tracker_offline',
       'schema_version': 1,
       'installation_id': '${hex(8)}-${hex(4)}-4${hex(3)}-a${hex(3)}-${hex(12)}',
       'created_at': now,

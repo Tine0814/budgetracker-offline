@@ -143,10 +143,14 @@ class _LocalBackupValidator {
 
   Map<String, dynamic> validate() {
     result = map(document, 'Backup');
-    if (result['format'] != 'expeneses_tracker_offline' ||
+    // Accept backups exported before the app-name correction.
+    const legacyFormat = 'expeneses_tracker_offline';
+    if ((result['format'] != 'expenses_tracker_offline' &&
+            result['format'] != legacyFormat) ||
         result['schema_version'] != 1) {
       invalid('unsupported format or version');
     }
+    result['format'] = 'expenses_tracker_offline';
     if (!RegExp(
       r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
     ).hasMatch(text(result['installation_id'], 'Installation ID'))) {

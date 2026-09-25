@@ -1,4 +1,4 @@
-package com.expenesestracker.offline
+package com.expensestracker.offline
 
 import io.flutter.embedding.android.FlutterActivity
 
